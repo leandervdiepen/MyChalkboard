@@ -8,21 +8,8 @@
           <AddCourse></AddCourse>
         </div>
       </div>
-      <div class="calender" v-if="isSelected == 2"></div>
-      <div class="todo" v-if="isSelected == 3"></div>
-    </div>
-    <div class="navigation mb-6">
-      <div class="columns">
-        <div class="column">
-          <button class="button" :class="{'selected': isSelected == 1}" @click="isSelected = 1">Kurse</button>
-        </div>
-        <div class="column">
-          <button class="button" :class="{'selected': isSelected == 2}" @click="isSelected = 2">Kalender</button>
-        </div>
-        <div class="column">
-          <button class="button" :class="{'selected': isSelected == 3}" @click="isSelected = 3">ToDo's</button>
-        </div>
-      </div>
+      <div class="calender" v-if="isSelected == 2">Kalender</div>
+      <div class="todo" v-if="isSelected == 3">ToDo Liste</div>
     </div>
   </div>
 </template>
@@ -30,22 +17,19 @@
 <script>
 import Courses from "@/components/Courses";
 import AddCourse from "@/components/AddCourse";
+import { mapState } from "vuex";
 export default {
   name: "Home",
   components: {
     Courses,
-    AddCourse
+    AddCourse,
   },
   data() {
-    return {
-      isSelected: 1
-    };
+    return {};
   },
-  methods: {
-    select(e) {
-      console.log(e);
-    }
-  }
+  computed: {
+    ...mapState(["isSelected"]),
+  },
 };
 </script>
 
@@ -64,9 +48,6 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-}
-.selected {
-  background-color: #c5f3ff;
 }
 .navigation {
   width: 250px;

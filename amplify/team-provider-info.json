@@ -10,6 +10,13 @@
       "StackName": "amplify-mychalkboard-dev-102817",
       "StackId": "arn:aws:cloudformation:eu-central-1:138030817289:stack/amplify-mychalkboard-dev-102817/963482f0-176d-11eb-9f80-02d3f3908a12",
       "AmplifyAppId": "d1h82zzv2ckv9b"
+    },
+    "categories": {
+      "auth": {
+        "mychalkboardc3782b84": {
+          "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"205092403169-ft4ajtnf335hvt6m26ipla90g55mnq1s.apps.googleusercontent.com\",\"client_secret\":\"A1zNzmrO9wEfswAO0f4Un77z\"}]"
+        }
+      }
     }
   }
 }
