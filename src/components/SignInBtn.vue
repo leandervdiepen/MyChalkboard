@@ -1,12 +1,9 @@
 <template>
-  <div class="container">
-    <button
-      class="button signInBtn"
-      @click="signInWithGoogle"
-    >
-    <span class="icon mr-4"><i class="fab fa-google"></i></span>Sign In with Google
-    </button>
-  </div>
+  <button class="button signInBtn" @click="signInWithGoogle">
+    <span class="icon mr-4 has-background-green"
+      ><i class="fab fa-google"></i></span
+    >Sign In with Google
+  </button>
 </template>
 
 <script>
@@ -25,8 +22,10 @@ export default {
   display: flex;
   justify-content: center;
 }
-.signInBtn {
-  transform: scale(2, 2);
-  margin-top: 150px;
+.icon {
+  background-color: hsl(141, 53%, 53%);
+}
+.button:hover {
+  background-color: hsl(141, 53%, 53%);
 }
 </style>

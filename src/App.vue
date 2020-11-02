@@ -6,25 +6,29 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import { Auth, Hub } from "aws-amplify";
 export default {
   components: {
     Navbar,
   },
-  data() {
-    return {
-      user: null,
-    };
+  computed: {
+    ...mapState({
+      user: (state) => state.user,
+    }),
+  },
+  methods: {
+    ...mapActions(["userLoggedIn"]),
   },
   mounted() {
     Hub.listen("auth", ({ payload: { event, data } }) => {
       switch (event) {
         case "signIn":
-          this.user = data;
+          this.userLoggedIn(data);
           break;
         case "signOut":
-          this.user = null;
+          this.userLoggedIn(null);
           break;
       }
     });

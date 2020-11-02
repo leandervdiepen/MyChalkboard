@@ -8,8 +8,8 @@
           <AddCourse></AddCourse>
         </div>
       </div>
-      <div class="calender" v-if="isSelected == 2">Kalender</div>
-      <div class="todo" v-if="isSelected == 3">ToDo Liste</div>
+      <div class="calender" v-if="isSelected == 2">ToDo Liste</div>
+      <div class="todo" v-if="isSelected == 3">Kalender</div>
     </div>
   </div>
 </template>
