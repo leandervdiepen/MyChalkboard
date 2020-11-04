@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import courses from "./courses"
 
 export default createStore({
   state: {
@@ -22,5 +23,8 @@ export default createStore({
     }
   },
   modules: {
+    courses
   }
 })
+
+// arn:aws:dynamodb:eu-central-1:138030817289:table/Courses

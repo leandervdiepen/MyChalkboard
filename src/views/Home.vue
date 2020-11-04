@@ -10,6 +10,7 @@
       </div>
       <div class="calender" v-if="isSelected == 2">ToDo Liste</div>
       <div class="todo" v-if="isSelected == 3">Kalender</div>
+      <button class="button" @click="fetchAllCourses">Call API</button>
     </div>
   </div>
 </template>
@@ -17,7 +18,7 @@
 <script>
 import Courses from "@/components/Courses";
 import AddCourse from "@/components/AddCourse";
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
 export default {
   name: "Home",
   components: {
@@ -26,6 +27,9 @@ export default {
   },
   data() {
     return {};
+  },
+  methods: {
+    ...mapActions("courses",["fetchAllCourses"])
   },
   computed: {
     ...mapState(["isSelected"]),

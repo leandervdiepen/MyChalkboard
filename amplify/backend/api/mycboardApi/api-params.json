@@ -1,0 +1,42 @@
+{
+    "paths": [
+        {
+            "name": "/courses",
+            "lambdaFunction": "lambdaCourses",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            },
+            "policyResourceName": "/courses"
+        }
+    ],
+    "resourceName": "mycboardApi",
+    "apiName": "mycboardApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "lambdaCourses"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-mychalkboard-dev-102817-authRole",
+        "unAuthRoleName": "amplify-mychalkboard-dev-102817-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "lambdaCourses",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
