@@ -177,6 +177,7 @@ export default {
         author: "",
         rsrcLink: "",
       });
+      this.numberOfBooks++;
     },
     removeBook(event) {
       this.numberOfBooks--;
