@@ -1,5 +1,6 @@
 import { API } from "aws-amplify";
 import CryptoJS from "crypto-js"
+import { response } from "../../amplify/backend/function/cboardLambdaApi/src/app";
 
 // API Endpoint: https://ipca22i6nh.execute-api.eu-central-1.amazonaws.com/dev
 
@@ -7,8 +8,8 @@ export default {
   namespaced: true,
   state: {
     courses: [],
-    apiName: 'mycboardApi',
-    path: '/coursesLambda-dev',
+    apiName: 'mycboardAPI',
+    path: '/courses',
     partitionKey: "courseID",
     sortKey: "userID",
     newCourse: {
@@ -24,8 +25,12 @@ export default {
   getters: {},
   actions: {
     // Fetch All Courses with the userid attribute of the authenticated user
-    fetchAllCoursesForUser({ state }) {
-      API.get(state.apiName, state.path + "/:ID", {})
+    fetchOneCourse() {
+      let params = {
+        courseID: "107517613918992546018-6eeeb6328e5f3433e88a8c07f1350978",
+        userID: "107517613918992546018"
+      }
+      API.get("mycboardAPI", "/courses/object/:courseID/:userID", params)
         .then(res => {
           console.log(res)
         }).catch(err => {
@@ -33,9 +38,13 @@ export default {
         })
     },
     fetchAllCourses({ state, commit }) {
-      API.get(state.apiName, state.path + "/:" + state.partitionKey, {}).then(res => {
+      let params = {
+        courseID: "107517613918992546018-6eeeb6328e5f3433e88a8c07f1350978",
+        userID: "107517613918992546018"
+      }
+      API.get(state.apiName, state.path, params).then(res => {
         console.log(res)
-        commit("setCourses", JSON.parse(res.body))
+        commit("setCourses", res.body)
       }).catch(err => {
         console.log(err)
       })
@@ -43,17 +52,20 @@ export default {
     // Call API to insert a course into the ddb
     createCourse({ state, dispatch }) {
       dispatch("hashCourseID")
-      let myInit = {
-        body: state.newCourse
-      }
-      console.log(myInit)
-      API.put(state.apiName, state.path, myInit)
-        .then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-    },
+      return new Promise((resolve,reject) => {
+        let myInit = {
+          body: state.newCourse
+        }
+        API.put(state.apiName, state.path, myInit)
+          .then(res => {
+            console.log(res)
+            resolve(response)
+          }).catch(err => {
+            console.log(err)
+            reject(err)
+          })
+      })
+      },
     // Generate a hash as a unique ID for the course
     hashCourseID({ state, dispatch, commit, }) {
       dispatch("getUserID")
@@ -66,7 +78,7 @@ export default {
         data: state.newCourse,
         nonce: 0
       }
-      let courseid = state.newCourse.userID + "-" + CryptoJS.MD5(hash.index + hash.previousHash + hash.timestamp + hash.data + hash.nonce).toString()
+      let courseid = CryptoJS.MD5(hash.index + hash.previousHash + hash.timestamp + hash.data + hash.nonce).toString()
       commit("setCourseID", courseid)
       commit("setDate", timestamp)
     },
@@ -88,7 +100,7 @@ export default {
       state.newCourse.userID = id
     },
     setCourseName(state, name) {
-      state.newCourse.name = name
+      state.newCourse.courseName = name
     },
     changeCourseType(state, type) {
       state.newCourse.type = type

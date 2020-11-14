@@ -1,6 +1,6 @@
 <template>
   <div class="addCourse mx-3 my-3">
-    <div class="modal" :class="{ 'is-active': showCard }">
+    <div class="modal" id="modal" :class="{ 'is-active': showCard }">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -138,14 +138,15 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+// import BulmaNotification from '../assets/notifications/bulma-notifications';
 export default {
   data() {
     return {
-      courseName: '',
+      courseName: "",
       showCard: false,
       numberOfBooks: 0,
       books: [],
-      notes: ''
+      notes: "",
     };
   },
   computed: {
@@ -163,12 +164,17 @@ export default {
   },
   methods: {
     ...mapActions("courses", ["createCourse"]),
-    ...mapMutations("courses", ["setCourseName", "changeCourseType", "addBooks","setNotes"]),
+    ...mapMutations("courses", [
+      "setCourseName",
+      "changeCourseType",
+      "addBooks",
+      "setNotes",
+    ]),
     toggleModalCard() {
       this.showCard = !this.showCard;
     },
     updateCourseName() {
-      this.changeCourseName(this.courseName)
+      this.changeCourseName(this.courseName);
     },
     addABook() {
       this.books.push({
@@ -185,11 +191,25 @@ export default {
       // Find desired book in array and remove it
     },
     makeRequest() {
-      this.addBooks(this.books)
-      this.setCourseName(this.courseName)
-      this.setNotes(this.notes)
-      this.createCourse()
-    }
+      this.addBooks(this.books);
+      this.setCourseName(this.courseName);
+      this.setNotes(this.notes);
+      this.createCourse().then(() => {})
+      //   setTimeout(() => {
+      //     var element = document.getElementById("modal");
+      //     element.classList.remove("is-active");
+      //   }, 150);
+      //   let notif = new BulmaNotification()
+      //   notif.show("Success","Successfully saved your course. Enjoy!","primary","2500")
+      // }).catch(() => {
+      //   setTimeout(() => {
+      //     var element = document.getElementById("modal");
+      //     element.classList.remove("is-active");
+      //   }, 150);
+      //   let notif = new BulmaNotification()
+      //   notif.show("Error", "There was an error in saving your course. Please try again! Or Report a Bug!","danger","5000")
+      // });
+    },
   },
 };
 </script>
