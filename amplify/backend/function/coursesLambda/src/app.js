@@ -6,10 +6,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-/* Amplify Params - DO NOT EDIT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
+
 
 const AWS = require('aws-sdk')
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
@@ -31,7 +28,7 @@ const partitionKeyType = "S";
 const sortKeyName = "userID";
 const sortKeyType = "S";
 const hasSortKey = sortKeyName !== "";
-const path = "/courses";
+const path = "/item";
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
@@ -153,7 +150,6 @@ app.put(path, function(req, res) {
     TableName: tableName,
     Item: req.body
   }
-  console.log(putItemParams)
   dynamodb.put(putItemParams, (err, data) => {
     if(err) {
       res.statusCode = 500;
@@ -173,7 +169,7 @@ app.post(path, function(req, res) {
   if (userIdPresent) {
     req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
-  console.log(req.body)
+
   let putItemParams = {
     TableName: tableName,
     Item: req.body

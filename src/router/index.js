@@ -1,12 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store/index'
 import Home from '../views/Home.vue'
+import Welcome from '../views/Welcome'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { requiredAuth: true }
   },
+  {
+    path: '/welcome',
+    name: 'Welcome',
+    component: Welcome,
+    meta: { requiredAuth: false }
+  }
   // {
   //   path: '/about',
   //   name: 'About',
@@ -17,6 +26,16 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  let isAuthenticated = false
+  if (store.state.user != null) isAuthenticated = true
+  if (isAuthenticated || to.meta.requiredAuth == false) {
+    next()
+  } else {
+    next('/welcome')
+  }
 })
 
 export default router

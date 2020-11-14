@@ -29,11 +29,14 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions("courses",["fetchAllCourses"])
+    ...mapActions("courses",["fetchAllCourses", "getUserID"])
   },
   computed: {
     ...mapState(["isSelected"]),
   },
+  mounted() {
+    this.fetchAllCourses()
+  }
 };
 </script>
 
