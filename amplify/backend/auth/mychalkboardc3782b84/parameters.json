@@ -1,6 +1,6 @@
 {
     "identityPoolName": "mychalkboardc3782b84_identitypool_c3782b84",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mychalc3782b84",
     "userPoolName": "mychalkboardc3782b84_userpool_c3782b84",
     "autoVerifiedAttributes": [

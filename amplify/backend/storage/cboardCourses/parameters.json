@@ -1,5 +1,5 @@
 {
-    "tableName": "courses",
+    "tableName": "cboardCourses",
     "partitionKeyName": "courseID",
     "partitionKeyType": "S",
     "sortKeyName": "userID",
