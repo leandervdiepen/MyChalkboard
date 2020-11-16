@@ -74,4 +74,7 @@ export default {
 .selected {
   background-color: #c5f3ff;
 }
+.navbar {
+  z-index: 1;
+}
 </style>

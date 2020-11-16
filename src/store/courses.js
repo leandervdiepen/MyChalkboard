@@ -1,6 +1,5 @@
 import { API } from "aws-amplify";
 import CryptoJS from "crypto-js"
-import { response } from "../../amplify/backend/function/cboardLambdaApi/src/app";
 
 // API Endpoint: https://ipca22i6nh.execute-api.eu-central-1.amazonaws.com/dev
 
@@ -12,9 +11,9 @@ export default {
     path: '/courses',
     partitionKey: "courseID",
     sortKey: "userID",
+    userID: '',
     newCourse: {
       courseID: '',
-      userID: '',
       courseName: '',
       type: '',
       books: [], // { id: null, bookTitle: '', author: '', rsrcLink: '' }
@@ -25,26 +24,22 @@ export default {
   getters: {},
   actions: {
     // Fetch All Courses with the userid attribute of the authenticated user
-    fetchOneCourse() {
-      let params = {
-        courseID: "107517613918992546018-6eeeb6328e5f3433e88a8c07f1350978",
-        userID: "107517613918992546018"
-      }
-      API.get("mycboardAPI", "/courses/object/:courseID/:userID", params)
+    fetchAllCoursesForUser({ state }) {
+      API.get(state.apiName, state.path + "/:ID", {})
         .then(res => {
           console.log(res)
         }).catch(err => {
           console.log(err)
         })
     },
-    fetchAllCourses({ state, commit }) {
-      let params = {
-        courseID: "107517613918992546018-6eeeb6328e5f3433e88a8c07f1350978",
-        userID: "107517613918992546018"
+    fetchAllCoursesByUser({ state, commit, dispatch }) {
+      let myInit = {
+        response: true,
       }
-      API.get(state.apiName, state.path, params).then(res => {
-        console.log(res)
-        commit("setCourses", res.body)
+      dispatch("getUserID").then
+      API.get(state.apiName, state.path + "?courseID=" + state.userID, myInit).then(res => {
+        console.log(res.data.Items)
+        commit("setCourses", res.data.Items)
       }).catch(err => {
         console.log(err)
       })
@@ -52,34 +47,34 @@ export default {
     // Call API to insert a course into the ddb
     createCourse({ state, dispatch }) {
       dispatch("hashCourseID")
-      return new Promise((resolve,reject) => {
+      return new Promise((resolve, reject) => {
         let myInit = {
           body: state.newCourse
         }
         API.put(state.apiName, state.path, myInit)
           .then(res => {
             console.log(res)
-            resolve(response)
+            resolve(res)
           }).catch(err => {
             console.log(err)
             reject(err)
           })
       })
-      },
+    },
     // Generate a hash as a unique ID for the course
     hashCourseID({ state, dispatch, commit, }) {
       dispatch("getUserID")
       let timestamp = new Date()
       timestamp = timestamp.toLocaleDateString() + " " + timestamp.toLocaleTimeString()
       let hash = {
-        index: state.newCourse.userID,
+        index: state.userID,
         previousHash: "none",
         timestamp: timestamp,
         data: state.newCourse,
         nonce: 0
       }
-      let courseid = CryptoJS.MD5(hash.index + hash.previousHash + hash.timestamp + hash.data + hash.nonce).toString()
-      commit("setCourseID", courseid)
+      let courseID = state.userID + "-" + CryptoJS.MD5(hash.index + hash.previousHash + hash.timestamp + hash.data + hash.nonce).toString()
+      commit("setCourseID", courseID)
       commit("setDate", timestamp)
     },
     // Cut 'Google_' from username to generate userid to use in storing courses with userId attr
@@ -88,7 +83,6 @@ export default {
       if (user != null) {
         let userid = user.replace(/\D/g, "");
         commit("setUserID", userid)
-        return userid
       }
     }
   },
@@ -97,10 +91,10 @@ export default {
       state.newCourse.courseID = id
     },
     setUserID(state, id) {
-      state.newCourse.userID = id
+      state.userID = id
     },
     setCourseName(state, name) {
-      state.newCourse.courseName = name
+      state.newCourse.name = name
     },
     changeCourseType(state, type) {
       state.newCourse.type = type
@@ -118,7 +112,9 @@ export default {
       state.newCourse.type = type
     },
     setCourses(state, obj) {
-      state.courses = [obj]
+      for (let i = 0; i < obj.length; i++) {
+        state.courses.push(obj[i])
+      }
       console.log(state.courses)
     },
     addOneCourseToCourses(state, course) {

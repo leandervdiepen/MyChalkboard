@@ -1,4 +1,7 @@
-/*
+/* Amplify Params - DO NOT EDIT
+  ENV
+  REGION
+Amplify Params - DO NOT EDIT *//*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
     http://aws.amazon.com/apache2.0/
@@ -8,7 +11,7 @@ See the License for the specific language governing permissions and limitations 
 
 
 
-const AWS = require("aws-sdk")
+const AWS = require('aws-sdk')
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 var bodyParser = require('body-parser')
 var express = require('express')
@@ -55,23 +58,36 @@ const convertUrlType = (param, type) => {
   }
 }
 
+
 /**********************
  * Custom ANY Methods
  **********************/
-app.get('path', function (req, res) {
+
+// Fetch Courses by courseID
+app.get(path, function (req, res) {
   var params = {
     TableName: tableName,
-    Key: {
-      "courseID": "107517613918992546018-6eeeb6328e5f3433e88a8c07f1350978",
-      "userID": "107517613918992546018"
+    ScanFilter: {
+      "courseID": {
+        ComparisonOperator: "CONTAINS",
+        AttributeValueList: [req.query.courseID]
+      }
     }
+    //   TableName: tableName,
+    //   KeyConditionExpression: '#cid = :courseID',
+    //   ExpressionAttributeNames: {
+    //     	"#cid": "courseID"
+    //   },
+    //   ExpressionAttributeValues: {
+    //     ':courseID': "4357f7b0ef24ce986a41cf6b9868793d"
+    //   },
   };
 
-  dynamodb.get(params, function (err, data) {
+  dynamodb.scan(params, function (err, data) {
     if (err) {
       res.send("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
     } else {
-      res.send("Hello" +JSON.stringify(data, null, 2));
+      res.send(JSON.stringify(data, null, 2));
     }
   });
 })

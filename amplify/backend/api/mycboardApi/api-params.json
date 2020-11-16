@@ -15,8 +15,7 @@
                 "unauth": [
                     "/GET"
                 ]
-            },
-            "policyResourceName": "/courses"
+            }
         }
     ],
     "resourceName": "mycboardAPI",
@@ -41,5 +40,6 @@
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "2dd15e89"
 }

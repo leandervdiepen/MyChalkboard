@@ -5,14 +5,15 @@
     min-width: 200px;
     width:50%;
     margin:16px auto;
-    padding: .5em 2em;
+    padding: .5em 2em !important;
     top:-100px;
     left:0;
     right:0;
-    position:fixed;
+    position:fixed !important;
     transition: opacity 0.2s, top 0.2s, visibility 0.2s;
     transition-timing-function: ease-in;
     display: flex;
+    z-index: 2;
     flex-direction: column;
     justify-content: center;
 }

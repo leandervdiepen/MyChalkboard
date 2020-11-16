@@ -138,7 +138,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-// import BulmaNotification from '../assets/notifications/bulma-notifications';
+import BulmaNotification from "../assets/notifications/bulma-notifications";
 export default {
   data() {
     return {
@@ -194,27 +194,43 @@ export default {
       this.addBooks(this.books);
       this.setCourseName(this.courseName);
       this.setNotes(this.notes);
-      this.createCourse().then(() => {})
-      //   setTimeout(() => {
-      //     var element = document.getElementById("modal");
-      //     element.classList.remove("is-active");
-      //   }, 150);
-      //   let notif = new BulmaNotification()
-      //   notif.show("Success","Successfully saved your course. Enjoy!","primary","2500")
-      // }).catch(() => {
-      //   setTimeout(() => {
-      //     var element = document.getElementById("modal");
-      //     element.classList.remove("is-active");
-      //   }, 150);
-      //   let notif = new BulmaNotification()
-      //   notif.show("Error", "There was an error in saving your course. Please try again! Or Report a Bug!","danger","5000")
-      // });
+      let notif = new BulmaNotification();
+      this.createCourse()
+        .then((res) => {
+          setTimeout(() => {
+            var element = document.getElementById("modal");
+            element.classList.remove("is-active");
+          }, 150);
+
+          notif.show(
+            "Success",
+            `Successfully saved your course with ID: ${res.body.courseID} . Enjoy!`,
+            "primary",
+            "5000"
+          );
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            var element = document.getElementById("modal");
+            element.classList.remove("is-active");
+          }, 150);
+
+          notif.show(
+            "Error",
+            `There was an error in saving your course. Please try again! Or Report a Bug!\n
+            Error Message: ${err.message}`,
+            "danger",
+            "10000"
+          );
+        });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/notifications/style.css";
+
 .circle {
   height: 50px;
   width: 50px;
