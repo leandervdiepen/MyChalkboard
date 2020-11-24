@@ -1,4 +1,4 @@
-import { API } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 import CryptoJS from "crypto-js"
 
 // API Endpoint: https://ipca22i6nh.execute-api.eu-central-1.amazonaws.com/dev
@@ -33,23 +33,32 @@ export default {
         })
     },
     fetchAllCoursesByUser({ state, commit, dispatch }) {
-      let myInit = {
-        response: true,
-      }
-      dispatch("getUserID").then
-      API.get(state.apiName, state.path + "?courseID=" + state.userID, myInit).then(res => {
-        console.log(res.data.Items)
-        commit("setCourses", res.data.Items)
+      // let myInit = {
+      //   response: true,
+      // }
+      dispatch("getUserID").then(userID => {
+        API.get(state.apiName, state.path + "/all?userID=" + userID).then(res => {
+          console.log(res)
+          commit("setCourses", res)
+        }).catch(err => {
+          console.log(err)
+        })
       }).catch(err => {
         console.log(err)
       })
+      // API.get(state.apiName, state.path + "?courseID=" + state.userID, myInit).then(res => {
+
     },
     // Call API to insert a course into the ddb
     createCourse({ state, dispatch }) {
       dispatch("hashCourseID")
       return new Promise((resolve, reject) => {
+        let body = state.newCourse
+        body.userID = state.userID
         let myInit = {
-          body: state.newCourse
+          body: {
+            body
+          }
         }
         API.put(state.apiName, state.path, myInit)
           .then(res => {
@@ -79,11 +88,18 @@ export default {
     },
     // Cut 'Google_' from username to generate userid to use in storing courses with userId attr
     getUserID({ commit, rootState }) {
-      let user = rootState.user.username
-      if (user != null) {
-        let userid = user.replace(/\D/g, "");
-        commit("setUserID", userid)
-      }
+      return new Promise((resolve, reject) => {
+        let user = rootState.user.username
+        if (user != null) {
+          let userid = user.replace(/\D/g, "");
+          commit("setUserID", userid)
+          resolve(userid)
+        } else {
+          Auth.signOut()
+          this.$router.push("/welcome")
+          reject("No User signed In")
+        }
+      })
     }
   },
   mutations: {

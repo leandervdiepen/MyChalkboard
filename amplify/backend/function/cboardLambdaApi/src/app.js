@@ -63,31 +63,44 @@ const convertUrlType = (param, type) => {
  * Custom ANY Methods
  **********************/
 
+// Return all Elements from user
+
+app.get(path + "/all", function (req, res) {
+  var params = {
+    TableName: tableName,
+    KeyConditionExpression: "#userID = :userID",
+    ExpressionAttributeNames: {
+      "#userID": "userID",
+    },
+    ExpressionAttributeValues: { ":userID": req.query.userID }
+
+  };
+
+  dynamodb.query(params, (err, data) => {
+    if (err) {
+      res.statusCode = 500;
+      res.json({ error: 'Could not load items: ' + err });
+    } else {
+      res.json(data);
+    }
+  });
+  
+})
+
+
 // Fetch Courses by courseID
 app.get(path, function (req, res) {
   var params = {
     TableName: tableName,
-    ScanFilter: {
-      "courseID": {
-        ComparisonOperator: "CONTAINS",
-        AttributeValueList: [req.query.courseID]
-      }
-    }
-    //   TableName: tableName,
-    //   KeyConditionExpression: '#cid = :courseID',
-    //   ExpressionAttributeNames: {
-    //     	"#cid": "courseID"
-    //   },
-    //   ExpressionAttributeValues: {
-    //     ':courseID': "4357f7b0ef24ce986a41cf6b9868793d"
-    //   },
+    // FilterExpression: 'courseiD = :courseID',
+    // ExpressionAttributeValues: {":courseID": req.query.courseID}
   };
 
   dynamodb.scan(params, function (err, data) {
     if (err) {
       res.send("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
     } else {
-      res.send(JSON.stringify(data, null, 2));
+      res.send(data);
     }
   });
 })
