@@ -33,11 +33,8 @@ export default {
         })
     },
     fetchAllCoursesByUser({ state, commit, dispatch }) {
-      // let myInit = {
-      //   response: true,
-      // }
       dispatch("getUserID").then(userID => {
-        API.get(state.apiName, state.path + "/all?userID=" + userID).then(res => {
+        API.get(state.apiName, state.path + "/allFromUser?userID=" + userID).then(res => {
           console.log(res)
           commit("setCourses", res)
         }).catch(err => {

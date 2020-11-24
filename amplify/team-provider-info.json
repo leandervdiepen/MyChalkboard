@@ -13,9 +13,7 @@
     },
     "categories": {
       "auth": {
-        "mychalkboardc3782b84": {
-          "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"205092403169-ft4ajtnf335hvt6m26ipla90g55mnq1s.apps.googleusercontent.com\",\"client_secret\":\"A1zNzmrO9wEfswAO0f4Un77z\"}]"
-        }
+        "mychalkboardc3782b84": {}
       }
     }
   }

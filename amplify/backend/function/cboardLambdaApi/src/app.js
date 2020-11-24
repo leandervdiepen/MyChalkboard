@@ -63,17 +63,12 @@ const convertUrlType = (param, type) => {
  * Custom ANY Methods
  **********************/
 
-// Return all Elements from user
-
-app.get(path + "/all", function (req, res) {
+app.get(path + "/allFromUser", function (req, res) {
   var params = {
     TableName: tableName,
-    KeyConditionExpression: "#userID = :userID",
-    ExpressionAttributeNames: {
-      "#userID": "userID",
-    },
-    ExpressionAttributeValues: { ":userID": req.query.userID }
-
+    IndexName: "userID-index",
+    KeyConditionExpression: "userID = :id",
+    ExpressionAttributeValues: { ":id": req.query.userID }
   };
 
   dynamodb.query(params, (err, data) => {
@@ -84,7 +79,7 @@ app.get(path + "/all", function (req, res) {
       res.json(data);
     }
   });
-  
+
 })
 
 
