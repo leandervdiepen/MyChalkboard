@@ -10,7 +10,7 @@
       </div>
       <div class="calender" v-if="isSelected == 2">ToDo Liste</div>
       <div class="todo" v-if="isSelected == 3">Kalender</div>
-      <button class="button" @click="fetchAllCourses">Call API</button>
+      <button class="button" @click="fetchAllCoursesByUser">Call API</button>
     </div>
   </div>
 </template>
@@ -29,11 +29,14 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions("courses",["fetchAllCourses"])
+    ...mapActions("courses",["fetchAllCoursesByUser", "getUserID"])
   },
   computed: {
     ...mapState(["isSelected"]),
   },
+  mounted() {
+    // this.fetchAllCourses()
+  }
 };
 </script>
 

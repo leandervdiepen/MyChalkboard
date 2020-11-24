@@ -1,0 +1,7 @@
+{
+    "tableName": "cboardCourses",
+    "partitionKeyName": "courseID",
+    "partitionKeyType": "S",
+    "sortKeyName": "userID",
+    "sortKeyType": "S"
+}

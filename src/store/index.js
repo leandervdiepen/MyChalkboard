@@ -4,7 +4,7 @@ import courses from "./courses"
 export default createStore({
   state: {
     isSelected: 1, // 1=Courses, 2=Todo, 3=Kalender
-    user: null
+    user: null,
   },
   actions: {
     changeSelected({ commit }, num) {
@@ -12,7 +12,7 @@ export default createStore({
     },
     userLoggedIn({ commit }, data) {
       commit("setUser", data)
-    }
+    },
   },
   mutations: {
     setSelected(state, num) {
@@ -20,7 +20,7 @@ export default createStore({
     },
     setUser(state, data) {
       state.user = data
-    }
+    },
   },
   modules: {
     courses

@@ -1,6 +1,6 @@
 <template>
   <div class="addCourse mx-3 my-3">
-    <div class="modal" :class="{ 'is-active': showCard }">
+    <div class="modal" id="modal" :class="{ 'is-active': showCard }">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -138,14 +138,15 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import BulmaNotification from "../assets/notifications/bulma-notifications";
 export default {
   data() {
     return {
-      courseName: '',
+      courseName: "",
       showCard: false,
       numberOfBooks: 0,
       books: [],
-      notes: ''
+      notes: "",
     };
   },
   computed: {
@@ -163,12 +164,17 @@ export default {
   },
   methods: {
     ...mapActions("courses", ["createCourse"]),
-    ...mapMutations("courses", ["setCourseName", "changeCourseType", "addBooks","setNotes"]),
+    ...mapMutations("courses", [
+      "setCourseName",
+      "changeCourseType",
+      "addBooks",
+      "setNotes",
+    ]),
     toggleModalCard() {
       this.showCard = !this.showCard;
     },
     updateCourseName() {
-      this.changeCourseName(this.courseName)
+      this.changeCourseName(this.courseName);
     },
     addABook() {
       this.books.push({
@@ -185,16 +191,46 @@ export default {
       // Find desired book in array and remove it
     },
     makeRequest() {
-      this.addBooks(this.books)
-      this.setCourseName(this.courseName)
-      this.setNotes(this.notes)
+      this.addBooks(this.books);
+      this.setCourseName(this.courseName);
+      this.setNotes(this.notes);
+      let notif = new BulmaNotification();
       this.createCourse()
-    }
+        .then((res) => {
+          setTimeout(() => {
+            var element = document.getElementById("modal");
+            element.classList.remove("is-active");
+          }, 150);
+
+          notif.show(
+            "Success",
+            `Successfully saved your course with ID: ${res.body.courseID} . Enjoy!`,
+            "primary",
+            "5000"
+          );
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            var element = document.getElementById("modal");
+            element.classList.remove("is-active");
+          }, 150);
+
+          notif.show(
+            "Error",
+            `There was an error in saving your course. Please try again! Or Report a Bug!\n
+            Error Message: ${err.message}`,
+            "danger",
+            "10000"
+          );
+        });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/notifications/style.css";
+
 .circle {
   height: 50px;
   width: 50px;

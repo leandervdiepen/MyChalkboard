@@ -8,20 +8,20 @@
     }
   },
   "storage": {
-    "ddbcourses": {
+    "cboardCourses": {
       "service": "DynamoDB",
       "providerPlugin": "awscloudformation"
     }
   },
   "function": {
-    "lambdaCourses": {
+    "cboardLambdaApi": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": [
         {
           "category": "storage",
-          "resourceName": "ddbcourses",
+          "resourceName": "cboardCourses",
           "attributes": [
             "Name",
             "Arn"
@@ -35,13 +35,13 @@
     }
   },
   "api": {
-    "mycboardApi": {
+    "mycboardAPI": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "lambdaCourses",
+          "resourceName": "cboardLambdaApi",
           "attributes": [
             "Name",
             "Arn"

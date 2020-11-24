@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import { Auth, Hub } from "aws-amplify";
 export default {
@@ -20,6 +20,8 @@ export default {
   },
   methods: {
     ...mapActions(["userLoggedIn"]),
+    ...mapActions("courses",["getUserID"]),
+    ...mapMutations(["setUser"]),
   },
   mounted() {
     Hub.listen("auth", ({ payload: { event, data } }) => {
@@ -34,7 +36,10 @@ export default {
     });
 
     Auth.currentAuthenticatedUser()
-      .then((user) => (this.user = user))
+      .then((user) => {
+        this.setUser(user);
+        this.$router.push("/")
+      })
       .catch(() => console.log("Not signed in"));
   },
 };
@@ -45,5 +50,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  /* overflow: hidden; */
 }
 </style>
