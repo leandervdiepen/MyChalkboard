@@ -204,7 +204,7 @@ export default {
 
           notif.show(
             "Success",
-            `Successfully saved your course with ID: ${res.body.courseID} . Enjoy!`,
+            `Successfully saved your course with ID: ${res.courseID} . Enjoy!`,
             "primary",
             "5000"
           );
@@ -218,7 +218,7 @@ export default {
           notif.show(
             "Error",
             `There was an error in saving your course. Please try again! Or Report a Bug!\n
-            Error Message: ${err.message}`,
+            Error Message: Error at ${err.url} with ${err.error}`,
             "danger",
             "10000"
           );

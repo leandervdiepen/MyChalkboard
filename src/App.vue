@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     ...mapActions(["userLoggedIn"]),
-    ...mapActions("courses",["getUserID"]),
+    ...mapActions("courses", ["getUserID"]),
     ...mapMutations(["setUser"]),
   },
   mounted() {
@@ -38,7 +38,7 @@ export default {
     Auth.currentAuthenticatedUser()
       .then((user) => {
         this.setUser(user);
-        this.$router.push("/")
+        this.$router.push("/");
       })
       .catch(() => console.log("Not signed in"));
   },
@@ -52,6 +52,7 @@ export default {
   color: #2c3e50;
 }
 body {
+  background-color: rgb(235, 255, 230);
   margin: 0;
   padding: 0;
   height: 100vh;

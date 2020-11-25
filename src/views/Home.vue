@@ -18,7 +18,7 @@
 <script>
 import Courses from "@/components/Courses";
 import AddCourse from "@/components/AddCourse";
-import { mapState,mapActions } from "vuex";
+import { mapState,mapActions, mapMutations } from "vuex";
 export default {
   name: "Home",
   components: {
@@ -29,13 +29,16 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions("courses",["fetchAllCoursesByUser", "getUserID"])
+    ...mapActions("courses",["fetchAllCoursesByUser", "getUserID"]),
+    ...mapMutations("courses", ["makeCourseChunks"])
   },
   computed: {
     ...mapState(["isSelected"]),
   },
   mounted() {
-    // this.fetchAllCourses()
+    this.fetchAllCoursesByUser().then(() => {
+      this.makeCourseChunks(2) // 4 == chunkSize
+    })
   }
 };
 </script>
@@ -47,8 +50,7 @@ export default {
 }
 .main {
   position: relative;
-  width: 90vw;
-  height: 85vh;
+  width: 95vw;
   border: 1px solid black;
 }
 #addCourse {

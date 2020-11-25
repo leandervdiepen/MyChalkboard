@@ -104,6 +104,30 @@ app.get(path, function (req, res) {
 * AWS Boilerplate Methods
 ***************************/
 
+/************************************
+* HTTP put method for insert object *
+*************************************/
+
+app.put(path, function (req, res) {
+
+  if (userIdPresent) {
+    req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  }
+
+  let putItemParams = {
+    TableName: tableName,
+    Item: req.body
+  }
+  dynamodb.post(putItemParams, (err, data) => {
+    if (err) {
+      res.statusCode = 500;
+      res.json({ error: err, url: req.url, body: req.body });
+    } else {
+      res.json({ success: 'put call succeed!', url: req.url, data: data })
+    }
+  });
+});
+
 
 /********************************
  * HTTP Get method for list objects *
@@ -187,29 +211,7 @@ app.get(path + '/object' + hashKeyPath + sortKeyPath, function (req, res) {
 });
 
 
-/************************************
-* HTTP put method for insert object *
-*************************************/
 
-app.put(path, function (req, res) {
-
-  if (userIdPresent) {
-    req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  }
-
-  let putItemParams = {
-    TableName: tableName,
-    Item: req.body
-  }
-  dynamodb.put(putItemParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url, body: req.body });
-    } else {
-      res.json({ success: 'put call succeed!', url: req.url, data: data })
-    }
-  });
-});
 
 /************************************
 * HTTP post method for insert object *

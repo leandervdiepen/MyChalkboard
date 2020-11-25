@@ -6,7 +6,8 @@ import CryptoJS from "crypto-js"
 export default {
   namespaced: true,
   state: {
-    courses: [],
+    courseChunks: [],
+    myCourses: [],
     apiName: 'mycboardAPI',
     path: '/courses',
     partitionKey: "courseID",
@@ -16,53 +17,44 @@ export default {
       courseID: '',
       courseName: '',
       type: '',
-      books: [], // { id: null, bookTitle: '', author: '', rsrcLink: '' }
+      books: [], // { id: null, bookTitle: '', author: '', rsrcLinks: [] }
       addNotes: '',
       date: null
     }
   },
   getters: {},
   actions: {
-    // Fetch All Courses with the userid attribute of the authenticated user
-    fetchAllCoursesForUser({ state }) {
-      API.get(state.apiName, state.path + "/:ID", {})
-        .then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-    },
     fetchAllCoursesByUser({ state, commit, dispatch }) {
-      dispatch("getUserID").then(userID => {
-        API.get(state.apiName, state.path + "/allFromUser?userID=" + userID).then(res => {
-          console.log(res)
-          commit("setCourses", res)
+      return new Promise((resolve, reject) => {
+        dispatch("getUserID").then(userID => {
+          API.get(state.apiName, state.path + "/allFromUser?userID=" + userID).then(res => {
+            commit("setCourses", res.Items)
+            resolve(res.Items)
+          }).catch(err => {
+            console.log(err)
+            reject(err)
+          })
         }).catch(err => {
           console.log(err)
+          reject(err)
         })
-      }).catch(err => {
-        console.log(err)
       })
-      // API.get(state.apiName, state.path + "?courseID=" + state.userID, myInit).then(res => {
-
     },
     // Call API to insert a course into the ddb
     createCourse({ state, dispatch }) {
       dispatch("hashCourseID")
       return new Promise((resolve, reject) => {
-        let body = state.newCourse
-        body.userID = state.userID
+        let params = state.newCourse
         let myInit = {
-          body: {
-            body
-          }
+          body: params
         }
-        API.put(state.apiName, state.path, myInit)
+        console.log(myInit)
+        API.post(state.apiName, state.path, myInit)
           .then(res => {
             console.log(res)
-            resolve(res)
+            resolve(res.body)
           }).catch(err => {
-            console.log(err)
+            console.log(err.error, err.url, err.body)
             reject(err)
           })
       })
@@ -82,6 +74,7 @@ export default {
       let courseID = state.userID + "-" + CryptoJS.MD5(hash.index + hash.previousHash + hash.timestamp + hash.data + hash.nonce).toString()
       commit("setCourseID", courseID)
       commit("setDate", timestamp)
+      commit("setUserID", state.userID)
     },
     // Cut 'Google_' from username to generate userid to use in storing courses with userId attr
     getUserID({ commit, rootState }) {
@@ -124,11 +117,19 @@ export default {
     setCourseType(state, type) {
       state.newCourse.type = type
     },
-    setCourses(state, obj) {
-      for (let i = 0; i < obj.length; i++) {
-        state.courses.push(obj[i])
+    setCourses(state, items) {
+      for (let i = 0; i < items.length; i++) {
+        state.myCourses.push(items[i])
       }
-      console.log(state.courses)
+    },
+    makeCourseChunks(state, chunksize) {
+      var i,
+        j,
+        temparray
+      for (i = 0, j = state.myCourses.length; i < j; i += chunksize) {
+        temparray = state.myCourses.slice(i, i + chunksize);
+        state.courseChunks.push(temparray)
+      }
     },
     addOneCourseToCourses(state, course) {
       state.courses.push(course)
