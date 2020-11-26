@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store/index'
 import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome'
+import Course from '../views/Course'
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     name: 'Welcome',
     component: Welcome,
     meta: { requiredAuth: false }
+  },
+  {
+    path:"/course/:user/:courseID",
+    name: Course,
+    component: Course
   }
   // {
   //   path: '/about',

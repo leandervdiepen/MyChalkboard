@@ -59,6 +59,20 @@ export default {
           })
       })
     },
+    deleteCourse({ state }, courseID) {
+      return new Promise((resolve, reject) => {
+        let params = {
+          courseID: courseID
+        }
+        API.del(state.apiName, state.path, params).then(res => {
+          console.log(res)
+          resolve(res)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
+      })
+    },
     // Generate a hash as a unique ID for the course
     hashCourseID({ state, dispatch, commit, }) {
       dispatch("getUserID")

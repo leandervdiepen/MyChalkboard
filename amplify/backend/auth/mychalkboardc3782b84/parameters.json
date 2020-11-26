@@ -51,6 +51,7 @@
     "authProvidersUserPool": [
         "Google"
     ],
+    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"205092403169-ft4ajtnf335hvt6m26ipla90g55mnq1s.apps.googleusercontent.com\",\"client_secret\":\"A1zNzmrO9wEfswAO0f4Un77z\"}]",
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8080/\"],\"LogoutURLs\":[\"http://localhost:8080/\"]}",
     "userPoolGroupList": [],

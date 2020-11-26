@@ -100,6 +100,24 @@ app.get(path, function (req, res) {
   });
 })
 
+// Delete one course by courseID
+app.delete(path, function (req, res) {
+  var removeItemParams = {
+    TableName: tableName,
+    Key: {
+      courseID: req.courseID
+    }
+  }
+  dynamodb.delete(removeItemParams, (err, data) => {
+    if (err) {
+      res.statusCode = 500;
+      res.json({ error: err, url: req.url });
+    } else {
+      res.json({ url: req.url, data: data });
+    }
+  });
+})
+
 /**************************
 * AWS Boilerplate Methods
 ***************************/

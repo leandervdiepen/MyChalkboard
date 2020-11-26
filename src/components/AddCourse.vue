@@ -140,6 +140,7 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import BulmaNotification from "../assets/notifications/bulma-notifications";
 export default {
+  props: ["isEdit"],
   data() {
     return {
       courseName: "",

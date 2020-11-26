@@ -27,14 +27,9 @@
               >
                 <div>
                   <p
-                    class="is-size-3 desktop is-size-3-mobile has-text-weight-bold has-text-centered"
-                  >
-                    {{ book.bookTitle }}
-                  </p>
-                  <p
                     class="is-size-4 desktop is-size-4-mobile has-text-weight-semibold has-text-centered"
                   >
-                    {{ book.author }}
+                    {{ book.bookTitle }} - {{ book.author }}
                   </p>
                   <p
                     class="is-size-5 desktop is-size-5-mobile has-text-weight-semibold has-text-centered"
@@ -43,9 +38,9 @@
                     v-if="book.isbn != null"
                     class="is-size-5 has-text-centered"
                   >
-                    ISBN No: {{ book.isbn }}
+                    ISBN: {{ book.isbn }}
                   </p>
-                  <p v-else class="is-size-5 has-text-centered">ISBN -</p>
+                  <p v-else class="is-size-5 has-text-centered">ISBN: -</p>
                   <table class="table">
                     <thead>
                       <tr>
@@ -67,20 +62,33 @@
                   <hr />
                 </div>
               </div>
-              <p class="has-text-right">Documents: {{ element.numDocs || 0 }}</p>
-              <footer class="card-footer">
-                <a href="#" class="card-footer-item has-text-success"
-                  ><span class="icon"><i class="fas fa-save"></i></span>Save</a
-                >
-                <a href="#" class="card-footer-item has-text-info"
-                  ><span class="icon"><i class="fas fa-cog"></i></span>Edit</a
-                >
-                <a href="#" class="card-footer-item has-text-danger-dark"
-                  ><span class="icon is-size-7"><i class="fas fa-ban"></i></span
-                  >Delete</a
-                >
-              </footer>
+              <p class="has-text-right">
+                Documents: {{ element.numDocs || 0 }}
+              </p>
             </div>
+            <footer class="card-footer">
+              <button
+                class="card-footer-item button has-icon has-text-success"
+                @click="saveCourse"
+              >
+                <span class="icon"><i class="fas fa-save"></i></span
+                ><span>Save</span>
+              </button>
+              <button
+                class="card-footer-item button has-text-info"
+                @click="editing != editing"
+              >
+                <span class="icon"><i class="fas fa-cog"></i></span
+                ><span>Edit</span>
+              </button>
+              <button
+                class="card-footer-item button has-text-danger-dark"
+                @click="tryDelete(element.courseID)"
+              >
+                <span class="icon is-size-7"><i class="fas fa-ban"></i></span
+                ><span>Delete</span>
+              </button>
+            </footer>
           </div>
         </div>
       </div>
@@ -89,7 +97,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   editing: false,
   computed: {
@@ -100,7 +108,13 @@ export default {
   mounted() {
     console.log(this.courseChunks);
   },
-  methods: {},
+  methods: {
+    ...mapActions("courses",["deleteCourse"]),
+    saveCourse() {},
+    tryDelete(courseID) {
+      this.deleteCourse(courseID)
+    },
+  },
 };
 </script>
 
@@ -121,7 +135,6 @@ export default {
   .card {
     width: 40vw;
     max-height: 550px;
-    overflow: auto;
   }
 }
 
@@ -133,6 +146,10 @@ export default {
     position: relative;
   }
 }
+// .card {
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
 .card-footer-item {
   text-decoration: none;
   color: black;
@@ -152,6 +169,7 @@ tbody {
   overflow-y: auto;
   overflow-x: hidden;
 }
+.card,
 .card-content {
   max-height: 100%;
   display: block;
