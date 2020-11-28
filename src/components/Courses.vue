@@ -18,8 +18,24 @@
               >
                 {{ element.courseName }}
               </p>
+              <router-link
+                :to="'/course/' + element.courseID"
+                class="button"
+              >
+                <span>Go To</span>
+                <span class="icon has-text-black"><i class="fas fa-door-open"></i></span>
+              </router-link>
             </header>
             <div class="card-content">
+              <h3
+                class="is-size-5 has-text-weight-semibold has-text-left has-text-success-dark"
+                style="text-decoration: underline"
+              >
+                Notes
+              </h3>
+              <div class="has-text-justified mt-2 mb-4" id="notes">
+                {{ element.addNotes }}
+              </div>
               <h3
                 class="is-size-5 has-text-weight-semibold has-text-left has-text-success-dark"
                 style="text-decoration: underline"
@@ -118,9 +134,18 @@ export default {
   },
   methods: {
     ...mapActions("courses", ["deleteCourse"]),
+    goToCourse(courseID) {
+      this.$router.push("/course/" + courseID);
+    },
     saveCourse() {},
     tryDelete(courseID) {
-      this.deleteCourse(courseID);
+      this.deleteCourse(courseID)
+        .then((res) => {
+          console.log("Success:" + res);
+        })
+        .catch((err) => {
+          console.log("Error:" + err);
+        });
     },
   },
 };
@@ -162,8 +187,14 @@ export default {
     min-height: 550px;
   }
   .card-content {
-    max-height: 500px;
+    max-height: 450px;
   }
+}
+#notes {
+  min-height: 50px;
+  border: 2px solid rgb(192, 192, 192);
+  padding: 2%;
+  border-radius: 5px;
 }
 .card-header {
   height: 50px;

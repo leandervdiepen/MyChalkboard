@@ -77,7 +77,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-mychalkboard-dev-102817-deployment",
-          "S3Key": "amplify-builds/cboardLambdaApi-4d6c5163706f2b38652b-build.zip"
+          "S3Key": "amplify-builds/cboardLambdaApi-394c4369357446526254-build.zip"
         }
       }
     },

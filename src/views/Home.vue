@@ -30,13 +30,14 @@ export default {
   },
   methods: {
     ...mapActions("courses",["fetchAllCoursesByUser", "getUserID"]),
-    ...mapMutations("courses", ["makeCourseChunks"])
+    ...mapMutations("courses", ["setCourses","makeCourseChunks"])
   },
   computed: {
     ...mapState(["isSelected"]),
   },
   mounted() {
-    this.fetchAllCoursesByUser().then(() => {
+    this.fetchAllCoursesByUser().then((res) => {
+      this.setCourses(res)
       this.makeCourseChunks(2) // 4 == chunkSize
     })
   }

@@ -18,7 +18,7 @@ const routes = [
     meta: { requiredAuth: false }
   },
   {
-    path:"/course/:user/:courseID",
+    path:"/course/:courseID",
     name: Course,
     component: Course
   }

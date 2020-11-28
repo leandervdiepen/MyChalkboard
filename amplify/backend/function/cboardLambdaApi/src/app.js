@@ -62,7 +62,7 @@ const convertUrlType = (param, type) => {
 /**********************
  * Custom ANY Methods
  **********************/
-
+// Query all of a users Courses
 app.get(path + "/allFromUser", function (req, res) {
   var params = {
     TableName: tableName,
@@ -82,40 +82,23 @@ app.get(path + "/allFromUser", function (req, res) {
 
 })
 
-
-// Fetch Courses by courseID
-app.get(path, function (req, res) {
+// Delete one course from a user with userID by its courseID
+app.delete(path, function (req, res) {
   var params = {
     TableName: tableName,
-    // FilterExpression: 'courseiD = :courseID',
-    // ExpressionAttributeValues: {":courseID": req.query.courseID}
-  };
-
-  dynamodb.scan(params, function (err, data) {
-    if (err) {
-      res.send("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
-    } else {
-      res.send(data);
-    }
-  });
-})
-
-// Delete one course by courseID
-app.delete(path, function (req, res) {
-  var removeItemParams = {
-    TableName: tableName,
     Key: {
-      courseID: req.courseID
+      courseID: req.params.courseID,
+      userID: req.params.userID
     }
   }
-  dynamodb.delete(removeItemParams, (err, data) => {
+  dynamodb.delete(params, (err, data) => {
     if (err) {
       res.statusCode = 500;
       res.json({ error: err, url: req.url });
     } else {
       res.json({ url: req.url, data: data });
     }
-  });
+  })
 })
 
 /**************************

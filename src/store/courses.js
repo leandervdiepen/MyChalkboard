@@ -25,11 +25,10 @@ export default {
   },
   getters: {},
   actions: {
-    fetchAllCoursesByUser({ state, commit, dispatch }) {
+    fetchAllCoursesByUser({ state, dispatch }) {
       return new Promise((resolve, reject) => {
         dispatch("getUserID").then(userID => {
           API.get(state.apiName, state.path + "/allFromUser?userID=" + userID).then(res => {
-            commit("setCourses", res.Items)
             resolve(res.Items)
           }).catch(err => {
             console.log(err)
@@ -61,12 +60,13 @@ export default {
           })
       })
     },
+    filterCoursesByID(state, courseID) {
+      console.log(state.myCourses)
+      return state.myCourses.filter(course => course.courseID == courseID)
+    },
     deleteCourse({ state }, courseID) {
       return new Promise((resolve, reject) => {
-        let params = {
-          courseID: courseID
-        }
-        API.del(state.apiName, state.path, params).then(res => {
+        API.del(state.apiName, state.path + "?courseID=" + courseID + "&courseID=" + state.userID).then(res => {
           console.log(res)
           resolve(res)
         }).catch(err => {
@@ -115,7 +115,7 @@ export default {
     setUserID(state, id) {
       state.userID = id
     },
-    setUserIDCourse(state,id){
+    setUserIDCourse(state, id) {
       state.newCourse.userID = id
     },
     setCourseName(state, name) {
@@ -137,9 +137,8 @@ export default {
       state.newCourse.type = type
     },
     setCourses(state, items) {
-      for (let i = 0; i < items.length; i++) {
-        state.myCourses.push(items[i])
-      }
+      state.myCourses = items
+      console.log(state.myCourses)
     },
     makeCourseChunks(state, chunksize) {
       var i,
