@@ -68,7 +68,7 @@
             <div class="control">
               <label class="label">Literature</label>
               <div class="columns" v-for="book in books" :key="book.id">
-                <span class="icon mt-6 removeBook" @click="removeBook(event)">
+                <span class="icon mt-6 removeBook" @click="removeBook(book.id)">
                   <i class="fas fa-minus-circle"></i>
                 </span>
                 <div class="column is-4">
@@ -90,12 +90,13 @@
                   />
                 </div>
                 <div class="column is-4">
-                  <label class="label">Ressource Link</label>
+                  <label class="label">Ressource Links</label>
                   <input
                     class="input"
                     type="text"
                     name="onlineResrc"
-                    v-model="books[book.id].rsrcLink"
+                    v-model="rsrcLink[book.id]"
+                    placeholder="Seperate with comma"
                   />
                 </div>
               </div>
@@ -143,6 +144,7 @@ export default {
   props: ["isEdit"],
   data() {
     return {
+      rsrcLink: [],
       courseName: "",
       showCard: false,
       numberOfBooks: 0,
@@ -177,53 +179,72 @@ export default {
     updateCourseName() {
       this.changeCourseName(this.courseName);
     },
+    // Called when you click 'Add Literature' Button
     addABook() {
       this.books.push({
         id: this.numberOfBooks,
         bookTitle: "",
         author: "",
-        rsrcLink: "",
+        rsrcLinks: [],
       });
       this.numberOfBooks++;
     },
-    removeBook(event) {
-      this.numberOfBooks--;
-      console.log(event);
-      // Find desired book in array and remove it
+    removeBook(bookID) {
+      console.log(this.books)
+      this.books = this.books.filter(book => book.id != bookID)
+      console.log(this.books)
+    },
+    parseRsrcLinks() {
+      for (let i = 0; i < this.books.length; i++) {
+        console.log(this.rsrcLink[i]);
+        this.books[i].rsrcLinks = this.rsrcLink[i].split(",");
+      }
     },
     makeRequest() {
+      this.parseRsrcLinks();
       this.addBooks(this.books);
       this.setCourseName(this.courseName);
       this.setNotes(this.notes);
-      let notif = new BulmaNotification();
+
       this.createCourse()
         .then((res) => {
-          setTimeout(() => {
-            var element = document.getElementById("modal");
-            element.classList.remove("is-active");
-          }, 150);
-
-          notif.show(
-            "Success",
-            `Successfully saved your course with ID: ${res.courseID} . Enjoy!`,
-            "primary",
-            "5000"
-          );
+          var element = document.getElementById("modal");
+          element.classList.remove("is-active");
+          this.successPut(res);
         })
         .catch((err) => {
-          setTimeout(() => {
-            var element = document.getElementById("modal");
-            element.classList.remove("is-active");
-          }, 150);
-
-          notif.show(
-            "Error",
-            `There was an error in saving your course. Please try again! Or Report a Bug!\n
-            Error Message: Error at ${err.url} with ${err.error}`,
-            "danger",
-            "10000"
-          );
+          var element = document.getElementById("modal");
+          element.classList.remove("is-active");
+          if (err.error != undefined) {
+            this.errorPut(err);
+          } else {
+            this.successPut(this.newCourse);
+          }
         });
+    },
+    successPut(res) {
+      let notif = new BulmaNotification();
+      notif.show(
+        "Success!",
+        `Added: ${res.courseID}. Now reloading...`,
+        "info",
+        "2500"
+      );
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 2750);
+    },
+    errorPut(err) {
+      let notif = new BulmaNotification();
+      notif.show(
+        "Message!",
+        `Error at ${err.url} with ${err.error}`,
+        "danger",
+        "2500"
+      );
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 2750);
     },
   },
 };

@@ -15,6 +15,7 @@ export default {
     userID: '',
     newCourse: {
       courseID: '',
+      userID: '',
       courseName: '',
       type: '',
       books: [], // { id: null, bookTitle: '', author: '', rsrcLinks: [] }
@@ -44,6 +45,7 @@ export default {
     createCourse({ state, dispatch }) {
       dispatch("hashCourseID")
       return new Promise((resolve, reject) => {
+
         let params = state.newCourse
         let myInit = {
           body: params
@@ -88,7 +90,7 @@ export default {
       let courseID = state.userID + "-" + CryptoJS.MD5(hash.index + hash.previousHash + hash.timestamp + hash.data + hash.nonce).toString()
       commit("setCourseID", courseID)
       commit("setDate", timestamp)
-      commit("setUserID", state.userID)
+      commit("setUserIDCourse", state.userID)
     },
     // Cut 'Google_' from username to generate userid to use in storing courses with userId attr
     getUserID({ commit, rootState }) {
@@ -104,7 +106,7 @@ export default {
           reject("No User signed In")
         }
       })
-    }
+    },
   },
   mutations: {
     setCourseID(state, id) {
@@ -113,8 +115,11 @@ export default {
     setUserID(state, id) {
       state.userID = id
     },
+    setUserIDCourse(state,id){
+      state.newCourse.userID = id
+    },
     setCourseName(state, name) {
-      state.newCourse.name = name
+      state.newCourse.courseName = name
     },
     changeCourseType(state, type) {
       state.newCourse.type = type

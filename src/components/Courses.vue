@@ -20,8 +20,14 @@
               </p>
             </header>
             <div class="card-content">
+              <h3
+                class="is-size-5 has-text-weight-semibold has-text-left has-text-success-dark"
+                style="text-decoration: underline"
+              >
+                Books
+              </h3>
               <div
-                class="content"
+                class="content books"
                 v-for="book in element.books"
                 :key="book.index"
               >
@@ -48,7 +54,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="j in book.ressourceLinks" :key="j.index">
+                      <tr v-for="j in book.rsrcLinks" :key="j.index">
                         <td>
                           <span
                             class="icon is-pulled-left is-size-7 has-text-warning-dark"
@@ -66,7 +72,7 @@
                 Documents: {{ element.numDocs || 0 }}
               </p>
             </div>
-            <footer class="card-footer">
+            <footer class="card-footer my-1">
               <button
                 class="card-footer-item button has-icon has-text-success"
                 @click="saveCourse"
@@ -100,19 +106,21 @@
 import { mapState, mapActions } from "vuex";
 export default {
   editing: false,
+  data() {
+    return {
+      chunks: [],
+    };
+  },
   computed: {
     ...mapState("courses", {
       courseChunks: (state) => state.courseChunks,
     }),
   },
-  mounted() {
-    console.log(this.courseChunks);
-  },
   methods: {
-    ...mapActions("courses",["deleteCourse"]),
+    ...mapActions("courses", ["deleteCourse"]),
     saveCourse() {},
     tryDelete(courseID) {
-      this.deleteCourse(courseID)
+      this.deleteCourse(courseID);
     },
   },
 };
@@ -125,8 +133,12 @@ export default {
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .column,
   .card {
-    height: 500px;
+    max-height: 550px;
+    min-height: 550px;
     width: 40vw;
+  }
+  .card-content {
+    max-height: 450px;
   }
 }
 
@@ -135,6 +147,10 @@ export default {
   .card {
     width: 40vw;
     max-height: 550px;
+    min-height: 550px;
+  }
+  .card-content {
+    max-height: 450px;
   }
 }
 
@@ -142,14 +158,28 @@ export default {
   .column,
   .card {
     width: 40vw;
-    height: 550px;
-    position: relative;
+    max-height: 550px;
+    min-height: 550px;
+  }
+  .card-content {
+    max-height: 500px;
   }
 }
-// .card {
-//   overflow-y: auto;
-//   overflow-x: hidden;
-// }
+.card-header {
+  height: 50px;
+}
+.card-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.card-footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 50px;
+  padding: 10px;
+  text-align: center;
+}
 .card-footer-item {
   text-decoration: none;
   color: black;
@@ -169,11 +199,10 @@ tbody {
   overflow-y: auto;
   overflow-x: hidden;
 }
-.card,
-.card-content {
-  max-height: 100%;
-  display: block;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+// .card {
+//   max-height: 100%;
+//   display: block;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
 </style>
