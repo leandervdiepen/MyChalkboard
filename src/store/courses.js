@@ -25,21 +25,6 @@ export default {
   },
   getters: {},
   actions: {
-    fetchAllCoursesByUser({ state, dispatch }) {
-      return new Promise((resolve, reject) => {
-        dispatch("getUserID").then(userID => {
-          API.get(state.apiName, state.path + "/allFromUser?userID=" + userID).then(res => {
-            resolve(res.Items)
-          }).catch(err => {
-            console.log(err)
-            reject(err)
-          })
-        }).catch(err => {
-          console.log(err)
-          reject(err)
-        })
-      })
-    },
     // Call API to insert a course into the ddb
     createCourse({ state, dispatch }) {
       dispatch("hashCourseID")
@@ -60,13 +45,36 @@ export default {
           })
       })
     },
+
+    // Get course with specific ID to display in Course view
     filterCoursesByID(state, courseID) {
       console.log(state.myCourses)
       return state.myCourses.filter(course => course.courseID == courseID)
     },
+
+    // Fetch all of a users courses
+    fetchAllCoursesByUser({ state, commit, dispatch }) {
+      return new Promise((resolve, reject) => {
+        dispatch("getUserID").then(userID => {
+          API.get(state.apiName, state.path + "/allFromUser?userID=" + userID).then(res => {
+            commit("setCourses", res.Items)
+            commit("makeCourseChunks", 2)
+            resolve(res.Items)
+          }).catch(err => {
+            console.log(err)
+            reject(err)
+          })
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
+      })
+    },
+
+    // delete one course by specifying its ID
     deleteCourse({ state }, courseID) {
       return new Promise((resolve, reject) => {
-        API.del(state.apiName, state.path + "?courseID=" + courseID + "&courseID=" + state.userID).then(res => {
+        API.del("mycboardAPI", state.path + "/object/:courseID/:userID?courseID=" + courseID + "&userID=" + state.userID).then(res => {
           console.log(res)
           resolve(res)
         }).catch(err => {
@@ -75,6 +83,9 @@ export default {
         })
       })
     },
+
+    
+    //Helper Methods for create call
     // Generate a hash as a unique ID for the course
     hashCourseID({ state, dispatch, commit, }) {
       dispatch("getUserID")

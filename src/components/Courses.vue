@@ -2,7 +2,7 @@
   <div class="hero">
     <div class="hero-body">
       <div
-        class="columns has-text-centered"
+        class="columns has-text-centered is-desktop"
         v-for="chunk in courseChunks"
         :key="chunk.index"
       >
@@ -18,12 +18,11 @@
               >
                 {{ element.courseName }}
               </p>
-              <router-link
-                :to="'/course/' + element.courseID"
-                class="button"
-              >
+              <router-link :to="'/course/' + element.courseID" class="button">
                 <span>Go To</span>
-                <span class="icon has-text-black"><i class="fas fa-door-open"></i></span>
+                <span class="icon has-text-primary"
+                  ><i class="fas fa-door-open"></i
+                ></span>
               </router-link>
             </header>
             <div class="card-content">
@@ -119,7 +118,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   editing: false,
   data() {
@@ -133,20 +132,31 @@ export default {
     }),
   },
   methods: {
-    ...mapActions("courses", ["deleteCourse"]),
+    ...mapActions("courses", [
+      "fetchAllCoursesByUser",
+      "deleteCourse",
+      "boilerDelete",
+    ]),
+    ...mapMutations("courses", ["setCourses", "makeCourseChunks"]),
+
     goToCourse(courseID) {
       this.$router.push("/course/" + courseID);
     },
     saveCourse() {},
     tryDelete(courseID) {
-      this.deleteCourse(courseID)
-        .then((res) => {
-          console.log("Success:" + res);
+      console.log(courseID);
+      this.boilerDelete(courseID)
+        .then(() => {
+          console.log("Successfully deleted");
+          this.fetchAllCoursesByUser();
         })
-        .catch((err) => {
-          console.log("Error:" + err);
+        .catch(() => {
+          console.log("Error in trying to delete course.");
         });
     },
+  },
+  mounted() {
+    this.fetchAllCoursesByUser();
   },
 };
 </script>
@@ -155,40 +165,9 @@ export default {
 .hero-body {
   border: 1px solid black;
 }
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .column,
-  .card {
-    max-height: 550px;
-    min-height: 550px;
-    width: 40vw;
-  }
-  .card-content {
-    max-height: 450px;
-  }
-}
-
-@media screen and (min-width: 1024px) and (max-width: 1408px) {
-  .column,
-  .card {
-    width: 40vw;
-    max-height: 550px;
-    min-height: 550px;
-  }
-  .card-content {
-    max-height: 450px;
-  }
-}
-
-@media screen and (min-width: 1409px) {
-  .column,
-  .card {
-    width: 40vw;
-    max-height: 550px;
-    min-height: 550px;
-  }
-  .card-content {
-    max-height: 450px;
-  }
+.column,
+.card {
+  min-width: 450px;
 }
 #notes {
   min-height: 50px;
@@ -230,10 +209,51 @@ tbody {
   overflow-y: auto;
   overflow-x: hidden;
 }
-// .card {
-//   max-height: 100%;
-//   display: block;
-//   overflow-y: auto;
-//   overflow-x: hidden;
-// }
+@media screen and(max-width: 768px) {
+  .column,
+  .card {
+    max-height: 550px;
+    min-height: 550px;
+    width: 80vw;
+  }
+  .card-content {
+    max-height: 450px;
+  }
+}
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .column,
+  .card {
+    max-height: 550px;
+    min-height: 550px;
+    width: 60vw;
+    margin: 0 auto;
+  }
+  .card-content {
+    max-height: 450px;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1408px) {
+  .column,
+  .card {
+    width: 30vw;
+    max-height: 550px;
+    min-height: 550px;
+  }
+  .card-content {
+    max-height: 450px;
+  }
+}
+
+@media screen and (min-width: 1409px) {
+  .column,
+  .card {
+    width: 30vw;
+    max-height: 550px;
+    min-height: 550px;
+  }
+  .card-content {
+    max-height: 450px;
+  }
+}
 </style>

@@ -82,24 +82,6 @@ app.get(path + "/allFromUser", function (req, res) {
 
 })
 
-// Delete one course from a user with userID by its courseID
-app.delete(path, function (req, res) {
-  var params = {
-    TableName: tableName,
-    Key: {
-      courseID: req.params.courseID,
-      userID: req.params.userID
-    }
-  }
-  dynamodb.delete(params, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url });
-    } else {
-      res.json({ url: req.url, data: data });
-    }
-  })
-})
 
 /**************************
 * AWS Boilerplate Methods

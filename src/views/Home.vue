@@ -10,7 +10,6 @@
       </div>
       <div class="calender" v-if="isSelected == 2">ToDo Liste</div>
       <div class="todo" v-if="isSelected == 3">Kalender</div>
-      <button class="button" @click="fetchAllCoursesByUser">Call API</button>
     </div>
   </div>
 </template>
@@ -18,7 +17,7 @@
 <script>
 import Courses from "@/components/Courses";
 import AddCourse from "@/components/AddCourse";
-import { mapState,mapActions, mapMutations } from "vuex";
+import { mapState } from "vuex";
 export default {
   name: "Home",
   components: {
@@ -28,19 +27,9 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    ...mapActions("courses",["fetchAllCoursesByUser", "getUserID"]),
-    ...mapMutations("courses", ["setCourses","makeCourseChunks"])
-  },
   computed: {
     ...mapState(["isSelected"]),
   },
-  mounted() {
-    this.fetchAllCoursesByUser().then((res) => {
-      this.setCourses(res)
-      this.makeCourseChunks(2) // 4 == chunkSize
-    })
-  }
 };
 </script>
 
@@ -55,7 +44,7 @@ export default {
   border: 1px solid black;
 }
 #addCourse {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
 }

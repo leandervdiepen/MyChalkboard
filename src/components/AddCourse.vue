@@ -166,7 +166,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("courses", ["createCourse"]),
+    ...mapActions("courses", ["createCourse","fetchAllCoursesByUser"]),
     ...mapMutations("courses", [
       "setCourseName",
       "changeCourseType",
@@ -211,6 +211,7 @@ export default {
           var element = document.getElementById("modal");
           element.classList.remove("is-active");
           this.successPut(res);
+          this.fetchAllCoursesByUser()
         })
         .catch((err) => {
           var element = document.getElementById("modal");
@@ -230,9 +231,7 @@ export default {
         "info",
         "2500"
       );
-      // setTimeout(() => {
-      //   location.reload();
-      // }, 2750);
+      
     },
     errorPut(err) {
       let notif = new BulmaNotification();
