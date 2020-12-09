@@ -82,6 +82,45 @@ app.get(path + "/allFromUser", function (req, res) {
 
 })
 
+// Retrieve single item
+app.get(path, function (req, res) {
+  var params = {
+    TableName: tableName,
+    Key: {
+      partitionKeyName: req.params.courseID,
+      sortKeyName: req.params.userID
+    }
+  }
+
+  dynamodb.get(params, (err, data) => {
+    if (err) {
+      console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+    }
+  })
+
+})
+
+// Delete single item
+app.delete(path, function (req, res) {
+  var params = {
+    TableName: tableName,
+    Key: {
+      partitionKeyName: req.params.courseID
+    }
+  }
+
+  dynamodb.delete(params, (err, data) => {
+    if (err) {
+      res.statusCode = 500;
+      res.json({ error: err, url: req.url });
+    } else {
+      res.json({ url: req.url, data: data });
+    }
+  })
+})
+
 
 /**************************
 * AWS Boilerplate Methods

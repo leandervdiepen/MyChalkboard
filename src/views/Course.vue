@@ -2,13 +2,12 @@
   <section class="hero is-info welcome is-small">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">{{currentCourse.courseName}}</h1>
-        <h2 class="subtitle">Welcome! I hope you are having a great day!</h2>
+        <h1 class="title">{{ courseID }} - {{ currentCourse.courseName }}</h1>
       </div>
     </div>
   </section>
   <section class="info-tiles">
-    <div class="tile is-ancestor has-text-centered">
+    <!-- <div class="tile is-ancestor has-text-centered">
       <div class="tile is-parent">
         <article class="tile is-child box">
           <p class="title">439k</p>
@@ -33,7 +32,7 @@
           <p class="subtitle">Exceptions</p>
         </article>
       </div>
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -47,11 +46,17 @@ export default {
     };
   },
   computed: {
-    ...mapActions("courses", ["filterCoursesByID"]),
+    ...mapActions("courses", ["getCourseByID"]),
   },
   mounted() {
-    this.courseID = this.$route.params.id
-    this.currentCourse = this.filterCoursesByID(this.courseID);
+    this.courseID = this.$route.params.id;
+    this.getCourseByID(this.courseID)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

@@ -47,9 +47,16 @@ export default {
     },
 
     // Get course with specific ID to display in Course view
-    filterCoursesByID(state, courseID) {
-      console.log(state.myCourses)
-      return state.myCourses.filter(course => course.courseID == courseID)
+    getCourseByID(state, courseID) {
+      return new Promise((resolve, reject) => {
+        API.get(state.apiName, state.path + "?courseID=" + courseID).then(res => {
+          console.log(res)
+          resolve(res)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
+      })
     },
 
     // Fetch all of a users courses
@@ -84,7 +91,7 @@ export default {
       })
     },
 
-    
+
     //Helper Methods for create call
     // Generate a hash as a unique ID for the course
     hashCourseID({ state, dispatch, commit, }) {
